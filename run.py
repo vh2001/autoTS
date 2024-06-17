@@ -10,7 +10,7 @@ if cfg.DATASET == "LQE":
     print(f"Running requested dataset: {cfg.DATASET}")
     # import parser
     from parsers.lqe_parser import parse_lqe
-    df = pd.read_csv(cfg.DATASET_DIR + "/LQE.csv")
+    df = pd.read_csv(cfg.DATASET_PATH)
 
     # parse data
     data = parse_lqe(df)

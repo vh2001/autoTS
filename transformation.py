@@ -3,11 +3,11 @@
 def transform(data, transformation):
 
     if transformation == "GADF":
-        from pyts.transformation import GramianAngularField
+        from pyts.image import GramianAngularField
         gadf = GramianAngularField(method='difference')
         data = gadf.fit_transform(data)
     elif transformation == "RP":
-        from pyts.transformation import RecurrencePlot
+        from pyts.image import RecurrencePlot
         rp = RecurrencePlot()
         data = rp.fit_transform(data)
     else:
