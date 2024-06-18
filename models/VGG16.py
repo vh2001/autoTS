@@ -2,7 +2,9 @@ import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
 from torch import nn
-from BaseModelWrapper import BaseModelWrapper
+from .BaseModelWrapper import BaseModelWrapper
+
+
 
 class VGG16_wrapper(BaseModelWrapper):
     def __init__(self, model, device=None):
@@ -25,6 +27,9 @@ class VGG16_wrapper(BaseModelWrapper):
 
         """
         print("Splitting data into train and test sets...")
+
+
+
         if fold == 0:
             dataset_size = len(data)
             test_size = int(dataset_size * test_split)
@@ -51,7 +56,7 @@ class VGG16_wrapper(BaseModelWrapper):
         self.model.train()
         for epoch in range(epochs):
             for inputs, labels in train_loader:
-                inputs, labels = inputs.to(self.device), labels.to(self.device)
+                inputs, labels = inputs.to(self.device).float(), labels.to(self.device)
                 optimizer.zero_grad()
                 outputs = self.model(inputs)
                 loss = criterion(outputs, labels)
@@ -69,17 +74,20 @@ class VGG16_wrapper(BaseModelWrapper):
             test_loader (Iterable): Data loader to predict on.
         Returns:
             List: Predictions made by the model.
+            List: Ground truth labels.
         """
         print("Making predictions...")
         self.model.eval()
         predictions = []
+        ground_truth = []
         with torch.no_grad():
-            for inputs, _ in test_loader:
-                inputs = inputs.to(self.device)
+            for inputs, gt in test_loader:
+                inputs = inputs.to(self.device).float()
                 outputs = self.model(inputs)
                 _, predicted = torch.max(outputs, 1)
                 predictions.extend(predicted.cpu().numpy())
-        return predictions
+                ground_truth.extend(gt.cpu().numpy())
+        return predictions, ground_truth
 
     def save_model(self, path):
         torch.save(self.model.state_dict(), path)

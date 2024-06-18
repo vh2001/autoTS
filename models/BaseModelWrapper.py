@@ -32,19 +32,6 @@ class BaseModelWrapper(ABC):
         pass
 
     @abstractmethod
-    def evaluate(self, test_loader: Iterable, *args, **kwargs) -> Any:
-        """
-        Abstract method to evaluate the model using a data loader and return evaluation metrics.
-        
-        Args:
-            test_loader (Iterable): Data loader or iterable for evaluation.
-        
-        Returns:
-            Any: Evaluation metrics.
-        """
-        pass
-
-    @abstractmethod
     def predict(self, test_loader: Iterable, *args, **kwargs) -> Any:
         """
         Abstract method to predict on given data loader and return predictions.
