@@ -1,16 +1,25 @@
 from sklearn.metrics import classification_report
 import pandas as pd
+
+
+
 # custom packages
 from models.VGG16 import VGG16_wrapper
 import src.config as cfg
-models = {
+model_wrappers = {
     "vgg16": VGG16_wrapper
 }
+
+# models = {
+#     "vgg16": models.vgg16(pretrained=False)
+
+# }
 
 
 def run_model(data: list):
 
-    model_wrapper = models[cfg.MODEL]
+
+    model_wrapper = model_wrappers[cfg.MODEL]()
     
     train_loader, test_loader = model_wrapper.train_test_data(data, cfg.BATCH_SIZE, cfg.SHUFFLE, cfg.DATA_SPLIT, cfg.FOLDS)
     

@@ -2,6 +2,11 @@ import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
 from torch import nn
+import numpy as np
+from pathlib import Path
+import torchvision.models as models
+# create a tensor dataset
+
 from .BaseModelWrapper import BaseModelWrapper
 
 def preprocess_vgg(images):
@@ -20,8 +25,8 @@ def preprocess_vgg(images):
     return images
 
 class VGG16_wrapper(BaseModelWrapper):
-    def __init__(self, model, device=None):
-        self.model = model
+    def __init__(self, device=None):
+        self.model = models.vgg16()
         self.device = device if device else 'cuda' if torch.cuda.is_available() else 'cpu'
         self.model.to(self.device)
 
@@ -42,12 +47,12 @@ class VGG16_wrapper(BaseModelWrapper):
         print("Splitting data into train and test sets...")
         X = []
         y = []
-        for x, label in data:
-            X.append(x)
-            y.append(label)
+        for i in range(len(data)):
+            X.append(data[i][0])
+            y.append(data[i][1])
 
         # make images 3-channel
-        X = preprocess_vgg(X)
+        X = preprocess_vgg(np.array(X))
         data = list(zip(X, y))
 
         if fold == 0:
@@ -110,7 +115,7 @@ class VGG16_wrapper(BaseModelWrapper):
         return predictions, ground_truth
 
     def save_model(self, path):
-        torch.save(self.model.state_dict(), path/ "model.pt")
+        torch.save(self.model.state_dict(), f"{path}/model.pt")
 
     def load_model(self, path):
         raise NotImplementedError("Loading model is not implemented for VGG16 model")
