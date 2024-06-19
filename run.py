@@ -15,6 +15,8 @@ if project_root not in sys.path:
 from models.VGG16 import VGG16_wrapper
 
 from src.parse import parse_data
+from src.run_model import run_model
+
 
 
 
@@ -32,6 +34,10 @@ def main():
 
 
     data = [(transformed_data[i], data[i][1]) for i in range(len(transformed_data))]
+
+
+    run_model(data)
+
 
 
 
@@ -180,10 +186,8 @@ elif cfg.DATASET == "UCR":
     # save classification report
 
 
-
-
-
-
+if __name__ == "___main___":
+    main()
 
 
 
