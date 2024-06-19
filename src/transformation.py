@@ -1,3 +1,4 @@
+import torch
 
 
 def transform(data, transformation):
@@ -10,6 +11,10 @@ def transform(data, transformation):
         from pyts.image import RecurrencePlot
         rp = RecurrencePlot()
         data = rp.fit_transform(data)
+    elif transformation == "GASF":
+        from pyts.image import GramianAngularField
+        gasf = GramianAngularField(method='summation')
+        data = gasf.fit_transform(data)
     else:
         raise ValueError("Invalid transformation")
 

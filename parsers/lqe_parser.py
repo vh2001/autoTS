@@ -1,10 +1,10 @@
 import pandas as pd
+from pathlib import Path
 
-
-def parse_lqe(df: pd.DataFrame)-> list[tuple[int, int, list[float]]]:
+def parse_lqe(path : Path)-> list[tuple[list[float], int]]:
     """
     Parse LQE dataset into a list of tuples with the following format:
-    (index, anomaly, timeseries)
+    (timeseries, anomaly)
 
     Anomalies:
     0: no anomaly
@@ -14,12 +14,13 @@ def parse_lqe(df: pd.DataFrame)-> list[tuple[int, int, list[float]]]:
 
     Parameters
     ----------
-    df : LQE csv read into a pandas dataframe
+    path : LQE csv path to read into a pandas dataframe
 
     Returns
     -------
     list of tuples
     """
+    df = pd.read_csv(path)
     
     row = df.iloc[0]
     tab =  row.tolist()[1:]
@@ -36,6 +37,6 @@ def parse_lqe(df: pd.DataFrame)-> list[tuple[int, int, list[float]]]:
         # anomaly label
         anomaly = int(tab[301])
     
-        anomalies.append((i, anomaly, ts))
+        anomalies.append((ts, anomaly))
 
     return anomalies

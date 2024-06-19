@@ -4,7 +4,20 @@ from torch.utils.data import DataLoader, random_split
 from torch import nn
 from .BaseModelWrapper import BaseModelWrapper
 
+def preprocess_vgg(images):
+    """
+    Preprocess images for VGG16 model.
 
+    Args:
+        images (np.ndarray): NumPy array of images.
+
+    Returns:
+        torch.Tensor: Preprocessed images as PyTorch tensor.   
+    """
+    images = torch.from_numpy(images)  # Convert NumPy array to PyTorch tensor
+    images = images.unsqueeze(1)       # Add channel dimension
+    images = images.repeat(1, 3, 1, 1) # Repeat the channel to mimic 3-channel RGB images
+    return images
 
 class VGG16_wrapper(BaseModelWrapper):
     def __init__(self, model, device=None):
@@ -27,8 +40,15 @@ class VGG16_wrapper(BaseModelWrapper):
 
         """
         print("Splitting data into train and test sets...")
+        X = []
+        y = []
+        for x, label in data:
+            X.append(x)
+            y.append(label)
 
-
+        # make images 3-channel
+        X = preprocess_vgg(X)
+        data = list(zip(X, y))
 
         if fold == 0:
             dataset_size = len(data)
@@ -90,7 +110,8 @@ class VGG16_wrapper(BaseModelWrapper):
         return predictions, ground_truth
 
     def save_model(self, path):
-        torch.save(self.model.state_dict(), path)
+        torch.save(self.model.state_dict(), path/ "model.pt")
 
     def load_model(self, path):
-        self.model.load_state_dict(torch.load(path, map_location=self.device))
+        raise NotImplementedError("Loading model is not implemented for VGG16 model")
+        # self.model.load_state_dict(torch.load(path, map_location=self.device))
