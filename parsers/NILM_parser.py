@@ -2,6 +2,11 @@ import os
 from pathlib import Path
 import pandas as pd
 import numpy as np
+import json
+import sys
+
+
+import src.config as cfg
 
 def parse_NILM(path: Path):
     """
@@ -18,21 +23,38 @@ def parse_NILM(path: Path):
     list of tuples
     """
     data = pd.read_pickle(path)
+
+    # get all appliances
+    appliances = set()
+    for house, house_dict in data.items():
+        for appliance in house_dict:
+            appliances.add(appliance)
+    
+
+    # create a dictionary for the appliances to map the strings to integers, because pytorch does not support string labels
+    appliances_dict = {}
+    for i, a in enumerate(appliances):
+        appliances_dict[a] = i
+
+    # save appliances dict as json to be able to map the predictions back to the appliance names
+    with open(f"{cfg.SAVE_PATH}/appliances_dict.json", "w") as f:
+        json.dump(appliances_dict, f)
+
     
     timeseries = []
-    count_empty = 0
+    # iterate over the houses and appliances in the dataset and create timeseries of length 300
     for house, house_dict in data.items():
         for appliance in house_dict:
             if "aggregate" in appliance:
                 continue
 
-            # split the df into 300 length timeseries
+            # load appliance dataframe
             df = house_dict[appliance]
             
             # get the number of timeseries
             n_timeseries = len(df) // 300
             for i in range(n_timeseries):
-                cut_out = df[i*300:(i+1)*300].values
+                cut_out = df[i*300:(i+1)*300].values.flatten()
                 y = appliance
                 # check if the timeseries is of the correct length
                 if len(cut_out) != 300:
@@ -40,10 +62,9 @@ def parse_NILM(path: Path):
 
                 # check if the timeseries is not all zeros
                 if np.all(cut_out == 0):
-                    count_empty+=1
-                    y = "empty"
+                    continue
                 else:
-                    timeseries.append((cut_out, y))
+                    timeseries.append((cut_out, appliances_dict[y]))
 
                 # check if appliance is on 
     return timeseries

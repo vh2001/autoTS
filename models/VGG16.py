@@ -9,6 +9,8 @@ import torchvision.models as models
 
 from .BaseModelWrapper import BaseModelWrapper
 
+
+
 def preprocess_vgg(images):
     """
     Preprocess images for VGG16 model.
@@ -23,6 +25,9 @@ def preprocess_vgg(images):
     images = images.unsqueeze(1)       # Add channel dimension
     images = images.repeat(1, 3, 1, 1) # Repeat the channel to mimic 3-channel RGB images
     return images
+
+
+
 
 class VGG16_wrapper(BaseModelWrapper):
     def __init__(self, device=None):
@@ -45,15 +50,16 @@ class VGG16_wrapper(BaseModelWrapper):
 
         """
         print("Splitting data into train and test sets...")
-        X = []
-        y = []
+        ts_data = []
+        labels = []
         for i in range(len(data)):
-            X.append(data[i][0])
-            y.append(data[i][1])
+            ts_data.append(data[i][0])
+            labels.append(data[i][1])
 
         # make images 3-channel
-        X = preprocess_vgg(np.array(X))
-        data = list(zip(X, y))
+        ts_data = preprocess_vgg(np.array(ts_data))
+        data = list(zip(ts_data, labels))
+      
 
         if fold == 0:
             dataset_size = len(data)

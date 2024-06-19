@@ -15,6 +15,8 @@ def transform(data, transformation):
         from pyts.image import GramianAngularField
         gasf = GramianAngularField(method='summation')
         data = gasf.fit_transform(data)
+    
+
     else:
         raise ValueError("Invalid transformation")
 
