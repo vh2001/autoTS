@@ -73,10 +73,14 @@ class InceptionTime_wrapper(BaseModelWrapper):
             X.append(data[i][0])
             y.append(data[i][1])
         
+        # check if specified number of classes is equal to the number of unique classes in the data
+        assert cfg.NUM_CLASSES == len((np.unique(y))), f"Number of classes must be equal to the number of unique classes in the data. Expected {cfg.NUM_CLASSES} classes, got {len(np.unique(y))} classes."
+
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=cfg.DATA_SPLIT, shuffle=cfg.SHUFFLE,
                                                         random_state=42)  
         
 
+        
         # one hot encode the labels
         y_train = tf.keras.utils.to_categorical(y_train, num_classes=cfg.NUM_CLASSES)
         y_test = tf.keras.utils.to_categorical(y_test, num_classes=cfg.NUM_CLASSES)
@@ -91,7 +95,7 @@ class InceptionTime_wrapper(BaseModelWrapper):
         X, y = zip(*train_data)
 
         X, y = np.array(X), np.array(y)
-        
+
         self.model.model.fit(X, y, epochs=epochs, batch_size=cfg.BATCH_SIZE, callbacks=callbacks)
         
 
@@ -103,6 +107,8 @@ class InceptionTime_wrapper(BaseModelWrapper):
         """
         print("Predicting...")
         X,y = zip(*data)
+
+        X, y = np.array(X), np.array(y)
 
         predictions = self.model.model.predict(X)
 

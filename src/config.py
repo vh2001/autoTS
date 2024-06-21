@@ -66,6 +66,7 @@ def save_config():
         "NUM_CLASSES": NUM_CLASSES,
         "DEPTH": DEPTH,
         "KERNEL_SIZE": KERNEL_SIZE
+        }
     else:
         cfg = {
         "DATASET": DATASET,
