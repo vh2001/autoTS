@@ -34,6 +34,12 @@ BATCH_SIZE = 32
 CALLBACKS = []
 
 
+# InceptionTime specific parameters (for more details read paper: https://arxiv.org/abs/1909.04939)
+INPUT_SHAPE = None # input shape for the InceptionTime model for eg. (300, 1) for 300 timesteps and 1 feature (univariate time series
+NUM_CLASSES = None # number of classes for classification
+DEPTH = None # depth of the InceptionTime model 
+KERNEL_SIZE = None # kernel size for the InceptionTime model
+
 
 def save_config():
     cfg = {

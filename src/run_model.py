@@ -4,7 +4,7 @@ import pandas as pd
 
 
 # custom packages
-from models.VGG16 import VGG16_wrapper
+from autoTS.models.wrapper.VGG16_wrapper import VGG16_wrapper
 import src.config as cfg
 model_wrappers = {
     "vgg16": VGG16_wrapper
