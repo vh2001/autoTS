@@ -28,6 +28,8 @@ def parse_NILM(path: Path):
     appliances = set()
     for house, house_dict in data.items():
         for appliance in house_dict:
+            if appliance == "aggregate":
+                continue
             appliances.add(appliance)
     
 
