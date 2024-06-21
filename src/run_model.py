@@ -5,9 +5,12 @@ import pandas as pd
 
 # custom packages
 from autoTS.models.wrapper.VGG16_wrapper import VGG16_wrapper
+from autoTS.models.wrapper.InceptionTime_wrapper import InceptionTime_wrapper
+
 import src.config as cfg
 model_wrappers = {
-    "vgg16": VGG16_wrapper
+    "VGG16": VGG16_wrapper,
+    "InceptionTime": InceptionTime_wrapper
 }
 
 # models = {
