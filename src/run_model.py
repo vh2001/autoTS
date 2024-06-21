@@ -11,8 +11,8 @@ import src.config as cfg
 
 # add your model wrappers here
 model_wrappers_imports = {
-    "VGG16": "autoTS.models.wrapper.VGG16_wrapper",
-    "InceptionTime": "autoTS.models.wrapper.InceptionTime_wrapper"
+    "VGG16": "autoTS.models.VGG16_wrapper",
+    "InceptionTime": "autoTS.models.InceptionTime_wrapper"
 }
 
 
@@ -20,9 +20,10 @@ model_wrappers_imports = {
 def run_model(data: list):
 
     model_wrapper_module = importlib.import_module(model_wrappers_imports[cfg.MODEL])
-    model_wrapper = getattr(model_wrapper_module, f"{cfg.MODEL}_wrapper")
+    model_wrapper_class = getattr(model_wrapper_module, f"{cfg.MODEL}_wrapper")
+    model_wrapper = model_wrapper_class()
     
-    train_loader, test_loader = model_wrapper.train_test_data(data, cfg.BATCH_SIZE, cfg.SHUFFLE, cfg.DATA_SPLIT, cfg.FOLDS)
+    train_loader, test_loader = model_wrapper.train_test_data(data)
     
     model_wrapper.train(train_loader, cfg.EPOCHS, cfg.LR, cfg.CALLBACKS)
 

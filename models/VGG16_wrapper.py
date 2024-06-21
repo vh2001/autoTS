@@ -7,6 +7,8 @@ from pathlib import Path
 import torchvision.models as models
 # create a tensor dataset
 
+
+import src.config as cfg
 from .BaseModelWrapper import BaseModelWrapper
 
 
@@ -37,7 +39,7 @@ class VGG16_wrapper(BaseModelWrapper):
 
         
 
-    def train_test_data(self, data, batch_size, shuffle=True, test_split=0.2, fold=0):
+    def train_test_data(self, data):
         """
         Split data into train and test sets and return loaders.
 
@@ -61,13 +63,13 @@ class VGG16_wrapper(BaseModelWrapper):
         data = list(zip(ts_data, labels))
       
 
-        if fold == 0:
+        if cfg.FOLDS == 0:
             dataset_size = len(data)
-            test_size = int(dataset_size * test_split)
+            test_size = int(dataset_size * cfg.DATA_SPLIT)
             train_size = dataset_size - test_size
             train_dataset, test_dataset = random_split(data, [train_size, test_size])
-            train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle)
-            test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+            train_loader = DataLoader(train_dataset, batch_size=cfg.BATCH_SIZE, shuffle=cfg.SHUFFLE)
+            test_loader = DataLoader(test_dataset, batch_size=cfg.BATCH_SIZE, shuffle=False)
             return train_loader, test_loader
         else:
             raise NotImplementedError("K-fold cross-validation is not implemented")

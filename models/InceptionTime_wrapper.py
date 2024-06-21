@@ -1,7 +1,7 @@
 from tensorflow import keras
 import tensorflow as tf 
 from sklearn.model_selection import train_test_split
-
+import numpy as np
 from .BaseModelWrapper import BaseModelWrapper
 from .InceptionTime import Classifier_INCEPTION
 import src.config as cfg
@@ -26,7 +26,7 @@ class InceptionTime_wrapper(BaseModelWrapper):
 
         if cfg.NUM_CLASSES is None:
             raise Exception("Number of classes must be provided in the config.py file for the InceptionTime model.")
-        if not os.exists(f"{cfg.SAVE_PATH}/model/"):
+        if not os.path.exists(f"{cfg.SAVE_PATH}/model/"):
             os.makedirs(f"{cfg.SAVE_PATH}/model/")
 
 
@@ -48,12 +48,13 @@ class InceptionTime_wrapper(BaseModelWrapper):
             callbacks=[reduce_lr, early_stopping],
             # change activation and loss function if you dont do multiclass classification
             loss_fn='softmax',
-            activation='categorical_crossentropy'
+            activation='categorical_crossentropy',
+            model_number=0
 
             )
 
 
-    def train_test_data(self, data, batch_size, shuffle=True, test_split=0.2, fold=0):
+    def train_test_data(self, data):
         """
         Split data into train and test sets and return loaders.
 
@@ -71,9 +72,14 @@ class InceptionTime_wrapper(BaseModelWrapper):
         for i in range(len(data)):
             X.append(data[i][0])
             y.append(data[i][1])
-
+        
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=cfg.DATA_SPLIT, shuffle=cfg.SHUFFLE,
                                                         random_state=42)  
+        
+
+        # one hot encode the labels
+        y_train = tf.keras.utils.to_categorical(y_train, num_classes=cfg.NUM_CLASSES)
+        y_test = tf.keras.utils.to_categorical(y_test, num_classes=cfg.NUM_CLASSES)
 
         return zip(X_train, y_train), zip(X_test, y_test)
 
@@ -82,9 +88,11 @@ class InceptionTime_wrapper(BaseModelWrapper):
         Train the model on given data loader.
         """
         print("Starting training...")
-        X, Y = zip(*train_data)
+        X, y = zip(*train_data)
 
-        self.model.model.fit(X, Y, epochs=epochs, batch_size=cfg.BATCH_SIZE, callbacks=callbacks)
+        X, y = np.array(X), np.array(y)
+        
+        self.model.model.fit(X, y, epochs=epochs, batch_size=cfg.BATCH_SIZE, callbacks=callbacks)
         
 
 
@@ -98,13 +106,18 @@ class InceptionTime_wrapper(BaseModelWrapper):
 
         predictions = self.model.model.predict(X)
 
+        # back to original labels from one hot encoding
+
+        y = [np.argmax(i) for i in y]
+        predictions = [np.argmax(i) for i in predictions]
+
         return predictions, y
     
     
 
     def save_model(self, path):
         print("Saving model...")
-        self.model.save(path)
+        self.model.model.save(path)
     
     def load_model(self, path):
         print("Loading model...")

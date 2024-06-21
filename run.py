@@ -26,6 +26,7 @@ def main():
     data = parse_data(cfg.DATASET, cfg.DATASET_PATH)
 
     if cfg.TRANSFORMATION is not None:
+        print(f"Applying transformation: {cfg.TRANSFORMATION}")
         ts_data = [x[0] for x in data]
 
         transformed_data = transform(ts_data, cfg.TRANSFORMATION)
