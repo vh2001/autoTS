@@ -1,0 +1,5 @@
+torch== 2.3.1
+torchivision==0.18.1
+
+
+
