@@ -1,28 +1,26 @@
 from sklearn.metrics import classification_report
 import pandas as pd
+import importlib
 
 
-
-# custom packages
-from autoTS.models.wrapper.VGG16_wrapper import VGG16_wrapper
-from autoTS.models.wrapper.InceptionTime_wrapper import InceptionTime_wrapper
+# # custom packages
+# from autoTS.models.wrapper.VGG16_wrapper import VGG16_wrapper
+# from autoTS.models.wrapper.InceptionTime_wrapper import InceptionTime_wrapper
 
 import src.config as cfg
-model_wrappers = {
-    "VGG16": VGG16_wrapper,
-    "InceptionTime": InceptionTime_wrapper
+
+# add your model wrappers here
+model_wrappers_imports = {
+    "VGG16": "autoTS.models.wrapper.VGG16_wrapper",
+    "InceptionTime": "autoTS.models.wrapper.InceptionTime_wrapper"
 }
 
-# models = {
-#     "vgg16": models.vgg16(pretrained=False)
-
-# }
 
 
 def run_model(data: list):
 
-
-    model_wrapper = model_wrappers[cfg.MODEL]()
+    model_wrapper_module = importlib.import_module(model_wrappers_imports[cfg.MODEL])
+    model_wrapper = getattr(model_wrapper_module, f"{cfg.MODEL}_wrapper")
     
     train_loader, test_loader = model_wrapper.train_test_data(data, cfg.BATCH_SIZE, cfg.SHUFFLE, cfg.DATA_SPLIT, cfg.FOLDS)
     

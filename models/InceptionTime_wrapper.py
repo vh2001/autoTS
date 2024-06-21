@@ -3,7 +3,7 @@ import tensorflow as tf
 from sklearn.model_selection import train_test_split
 
 from .BaseModelWrapper import BaseModelWrapper
-from InceptionTime import Classifier_INCEPTION
+from .InceptionTime import Classifier_INCEPTION
 import src.config as cfg
 import os
 class InceptionTime_wrapper(BaseModelWrapper):
