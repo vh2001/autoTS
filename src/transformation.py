@@ -1,4 +1,4 @@
-import torch
+import pyts
 
 
 def transform(data, transformation):
