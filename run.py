@@ -11,7 +11,6 @@ if project_root not in sys.path:
     print(project_root)
     sys.path.insert(0, project_root)
 
-from autoTS.models.wrapper.VGG16_wrapper import VGG16_wrapper
 
 from src.parse import parse_data
 from src.run_model import run_model
