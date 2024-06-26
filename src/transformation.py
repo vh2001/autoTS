@@ -15,6 +15,10 @@ def transform(data, transformation):
         from pyts.image import GramianAngularField
         gasf = GramianAngularField(method='summation')
         data = gasf.fit_transform(data)
+    elif transformation == "MTF":
+        from pyts.image import MarkovTransitionField
+        mtf = MarkovTransitionField()
+        data = mtf.fit_transform(data)
     elif transformation == "None":
         return data
     else:
