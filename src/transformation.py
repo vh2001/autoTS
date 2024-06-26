@@ -7,7 +7,7 @@ def transform(data, transformation):
     transformation_module = importlib.import_module(f"autoTS.transformations.{transformation}")
 
     # get transformation function
-    transformation_function = getattr(transformation_module, transformation)
+    transformation_function = getattr(transformation_module, "transform")
 
     # apply transformation
     data = transformation_function(data)
