@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 import os
 DATASET = "NILM" # select DATASET for any NILM data set put NILM and then provide the direct path to the .pkl file
-DATASET_PATH = "../Energy_graph/energy-knowledge-graph/data/parsed/DRED.pkl"
+DATASET_PATH = "../Energy_graph/energy-knowledge-graph/data/parsed/DRED.pkl" # path to the dataset file
 
 TRANSFORMATION = "GADF" # select transformation and keep in mind which transformation works with which model the available transformations can be seen in the transformation.py file
 MODEL = "VGG16" # select model the available models can be found on our github 
@@ -83,11 +83,8 @@ def save_config():
         "LR": LR,
         "BATCH_SIZE": BATCH_SIZE,
         "CALLBACKS": CALLBACKS
-    }
-            
-            
+        }
         
-    }
 
     with open(f"{SAVE_PATH}/config.json", "w") as f:
         json.dump(cfg, f)
