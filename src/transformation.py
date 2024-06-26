@@ -1,27 +1,15 @@
-import pyts
-
-
+import importlib
 def transform(data, transformation):
-
-    if transformation == "GADF":
-        from pyts.image import GramianAngularField
-        gadf = GramianAngularField(method='difference')
-        data = gadf.fit_transform(data)
-    elif transformation == "RP":
-        from pyts.image import RecurrencePlot
-        rp = RecurrencePlot()
-        data = rp.fit_transform(data)
-    elif transformation == "GASF":
-        from pyts.image import GramianAngularField
-        gasf = GramianAngularField(method='summation')
-        data = gasf.fit_transform(data)
-    elif transformation == "MTF":
-        from pyts.image import MarkovTransitionField
-        mtf = MarkovTransitionField()
-        data = mtf.fit_transform(data)
-    elif transformation == "None":
+    # check if we use transformation if not return data
+    if transformation == "None":
         return data
-    else:
-        raise ValueError("Invalid transformation")
+    # import transformation module
+    transformation_module = importlib.import_module(f"autoTS.transformations.{transformation}")
+
+    # get transformation function
+    transformation_function = getattr(transformation_module, transformation)
+
+    # apply transformation
+    data = transformation_function(data)
 
     return data

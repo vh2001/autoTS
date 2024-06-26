@@ -1,14 +1,14 @@
 from pathlib import Path
 
 
+# import parsers ADD NEW PARSERS HERE
 from parsers.lqe_parser import parse_lqe
 from parsers.ucr_parser import parse_ucr
 from parsers.NILM_parser import parse_NILM
 
 
-
-from parsers import * 
-parsers = {
+# add parser to the parsers dictionary ADD NEW PARSERS HERE
+parsers_dict = {
     "LQE" : parse_lqe,
     "UCR" : parse_ucr,
     "NILM" : parse_NILM
@@ -24,7 +24,7 @@ def parse_data(dataset:str, path:Path):
         Dataset to parse
     path : str
     """
-    data  = parsers[dataset](path)
+    data  = parsers_dict[dataset](path)
     return data
     
 

@@ -9,18 +9,25 @@ import importlib
 
 import src.config as cfg
 
-# add your model wrappers here
-model_wrappers_imports = {
-    "VGG16": "autoTS.models.VGG16_wrapper",
-    "InceptionTime": "autoTS.models.InceptionTime_wrapper"
-}
+
+
+# # add your model wrappers here
+# model_wrappers_imports = {
+#     "VGG16": "autoTS.models.VGG16_wrapper",
+#     "InceptionTime": "autoTS.models.InceptionTime_wrapper"
+# }
 
 
 
 def run_model(data: list):
 
-    model_wrapper_module = importlib.import_module(model_wrappers_imports[cfg.MODEL])
+    # import model wrapper
+    model_wrapper_module = importlib.import_module(f"autoTS.models.{cfg.MODEL}_wrapper")
+
+    # get model wrapper class
     model_wrapper_class = getattr(model_wrapper_module, f"{cfg.MODEL}_wrapper")
+
+    # create model wrapper object
     model_wrapper = model_wrapper_class()
     
     train_loader, test_loader = model_wrapper.train_test_data(data)
