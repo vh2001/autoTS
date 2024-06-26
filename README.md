@@ -8,7 +8,7 @@ Automatized pipeline for TS analysis
 
 ## Available models
 
-- VGG16: [link](https://arxiv.org/abs/1409.1556)(pytorch implementation)
+- VGG16: [link](https://arxiv.org/abs/1409.1556) (pytorch implementation)
 - InceptionTime: [link](https://arxiv.org/abs/1909.04939) (tensorflow implementation)
 
 ## Available transformations
