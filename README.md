@@ -1,25 +1,45 @@
 # autoTS
 Automatized pipeline for TS analysis
 
+## Available datasets
+
+- LQE dataset: [link]() TODO add link
+- NILM datasets: [link](http://sensorlab.ijs.si/archive/energy-knowledge-graph/harmonized.tar.gz) (80 GB)
+
+## Available models
+
+- VGG16: [link](https://arxiv.org/abs/1409.1556)(pytorch implementation)
+- InceptionTime: [link](https://arxiv.org/abs/1909.04939) (tensorflow implementation)
+
+## Available transformations
+
+- GADF
+- GASF
+- MTF
+- RP
+
+
+
 
 ## Setup
 
 1. Clone the repository
 2. Install the requirements (Installing pytorch and tensorflow at the same time is not recommended, due to dependency conflicts. Install only the one you need.)
 ```bash
-# requirements are needed for the pipeline and transformations to work
-pip install -r requirements.txt
+    # requirements are needed for the pipeline and transformations to work
+    pip install -r requirements.txt
 
-# install pytorch
-pip install -r requirements_torch.txt
+    # install pytorch
+    pip install -r requirements_torch.txt
 
-# install tensorflow
-pip install -r requirements_tensorflow.txt
+    # install tensorflow
+    pip install -r requirements_tensorflow.txt
 ```
 3. Setup the configuration in the [config.py](src/config.py) file
-4. Run the pipeline with the following command:
+4. Make sure that the dataset is present in the data folder and the path to the dataset is specified in the [config.py](src/config.py) file
+5. Run the pipeline with the following command:
 ```bash
-python run.py
+    python run.py
 ```
 
 # Pipeline structure
