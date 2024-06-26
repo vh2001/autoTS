@@ -33,7 +33,10 @@ def preprocess_vgg(images):
 
 class VGG16_wrapper(BaseModelWrapper):
     def __init__(self, device=None):
+
+        # initialize the VGG16 model
         self.model = models.vgg16()
+        # check if cuda is available and use it if available
         self.device = device if device else 'cuda' if torch.cuda.is_available() else 'cpu'
         self.model.to(self.device)
 
@@ -44,32 +47,32 @@ class VGG16_wrapper(BaseModelWrapper):
         Split data into train and test sets and return loaders.
 
         Args:
-            data (List[Tuple[Any, Any]]): Data to split, each tuple is (X, y).
-            batch_size (int): Batch size for loading data.
-            shuffle (bool): Whether to shuffle the data before splitting.
-            test_split (float): Fraction of the data to be used as the test set.
-            fold (int): Specifies which fold to use as the test set if using k-fold cross-validation.
+            data (List[Tuple[Any, Any]]): Data to split, each tuple is (X, y)..
 
         """
         print("Splitting data into train and test sets...")
         ts_data = []
         labels = []
+        # split the data into features and labels
         for i in range(len(data)):
             ts_data.append(data[i][0])
             labels.append(data[i][1])
 
-        # make images 3-channel
+        # make images 3-channel as required by VGG16
         ts_data = preprocess_vgg(np.array(ts_data))
         data = list(zip(ts_data, labels))
       
-
+        # check if we are using k-fold cross-validation
         if cfg.FOLDS == 0:
             dataset_size = len(data)
             test_size = int(dataset_size * cfg.DATA_SPLIT)
             train_size = dataset_size - test_size
+            # split the data into train and test sets
             train_dataset, test_dataset = random_split(data, [train_size, test_size])
+            # create data loaders based on config file
             train_loader = DataLoader(train_dataset, batch_size=cfg.BATCH_SIZE, shuffle=cfg.SHUFFLE)
             test_loader = DataLoader(test_dataset, batch_size=cfg.BATCH_SIZE, shuffle=False)
+
             return train_loader, test_loader
         else:
             raise NotImplementedError("K-fold cross-validation is not implemented")

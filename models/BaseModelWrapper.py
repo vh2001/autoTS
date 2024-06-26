@@ -3,17 +3,14 @@ from abc import ABC, abstractmethod
 
 class BaseModelWrapper(ABC):
     @abstractmethod
-    def train_test_data(self, data: List[Tuple[Any, Any]], batch_size: int, shuffle: bool = True, test_split: float = 0.2, fold: int = 0) -> Tuple[Iterable, Iterable]:
+    def train_test_data(self, data: List[Tuple[Any, Any]]) -> Tuple[Iterable, Iterable]:
         """
         Abstract method to split data into train and test sets and return loaders or iterators depending on the framework.
+        Arguments such as batch size, shuffle, etc. should be defined in the config file and used here.
         
         Args:
             data (List[Tuple[Any, Any]]): Data to split, each tuple is (X, y).
-            batch_size (int): Batch size for loading data.
-            shuffle (bool): Whether to shuffle the data before splitting.
-            test_split (float): Fraction of the data to be used as the test set (used if fold=0).
-            fold (int): Specifies which fold to use as the test set if using k-fold cross-validation.
-
+            
         Returns:
             Tuple[Iterable, Iterable]: Training and testing data loaders or iterators.
         """
@@ -22,7 +19,7 @@ class BaseModelWrapper(ABC):
     @abstractmethod
     def train(self, train_loader: Iterable, epochs: int, callbacks: List[Callable[[Any, int, int], None]] = [], *args, **kwargs) -> None:
         """
-        Abstract method to train the model on given data loader.
+        Abstract method to train the model on given data. The trained model should be saved in the self.model attribute.
         
         Args:
             train_loader (Iterable): Data loader or iterable to train on.
@@ -34,31 +31,32 @@ class BaseModelWrapper(ABC):
     @abstractmethod
     def predict(self, test_loader: Iterable, *args, **kwargs) -> Any:
         """
-        Abstract method to predict on given data loader and return predictions.
+        Abstract method to predict on given data loader and return predictions. 
+        The function should return the predictions and true labels as a tuple (Y_pred, Y_true)
         
         Args:
             test_loader (Iterable): Data loader or iterable to predict on.
         
         Returns:
-            Any: Predictions made by the model.
+            Y_pred: Predictions on the test data.
+            Y_true: True labels of the test data.
         """
         pass
 
     @abstractmethod
     def save_model(self, path: str, *args, **kwargs) -> None:
         """
-        Abstract method to save the model to the specified path.
+        Abstract method to save the model to the specified path. This
         
         Args:
             path (str): File path to save the model.
         """
         pass
 
-    @abstractmethod
     def load_model(self, path: str, *args, **kwargs) -> None:
         """
         Abstract method to load a model from the specified path.
-        
+        This is an optional method and can be implemented if needed.
         Args:
             path (str): File path from which to load the model.
         """

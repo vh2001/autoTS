@@ -34,6 +34,8 @@ class InceptionTime_wrapper(BaseModelWrapper):
         reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.25, patience=7, min_lr=0.0001)
         early_stopping = keras.callbacks.EarlyStopping(patience=9, restore_best_weights=True, monitor='loss')
 
+
+        # initialize the InceptionTime model with the specified parameters
         self.model = Classifier_INCEPTION(
             output_directory=f"{cfg.SAVE_PATH}/model/",
             input_shape=cfg.INPUT_SHAPE,
