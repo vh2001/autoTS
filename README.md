@@ -16,6 +16,11 @@ pip install -r requirements_torch.txt
 # install tensorflow
 pip install -r requirements_tensorflow.txt
 ```
+3. Setup the configuration in the [config.py](src/config.py) file
+4. Run the pipeline with the following command:
+```bash
+python run.py
+```
 
 # Pipeline structure
 The pipeline consists of 3 main steps: dataset parsing, data transformation and model training and evaluation. Each of these steps can be customized by adding new datasets, transformations and models. The output of the first step is a python list of tuples containing (X,y) pairs, where X is the input data and y is the target variable. For example a time series classification task would contain a list X of length N representing a time series of length N, and y containing the label for the time series. The output of the second step is a transformed version of the input data, in the same list format. The output of the third step is a trained model and a classification report of the model performance.
