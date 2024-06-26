@@ -1,7 +1,7 @@
 import pandas as pd
 from pathlib import Path
 
-def parse_lqe(path : Path)-> list[tuple[list[float], int]]:
+def parse(path : Path)-> list[tuple[list[float], int]]:
     """
     Parse LQE dataset into a list of tuples with the following format:
     (timeseries, anomaly)

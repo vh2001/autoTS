@@ -8,7 +8,7 @@ import sys
 
 import src.config as cfg
 
-def parse_NILM(path: Path):
+def parse(path: Path):
     """
     Parse NILM dataset into a list of tuples with the following format:
     (timeseries, appliance)

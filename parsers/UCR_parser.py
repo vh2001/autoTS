@@ -1,7 +1,7 @@
 import pandas as pd
 import os 
 from pathlib import Path
-def parse_ucr(path : Path)-> dict:
+def parse(path : Path)-> dict:
     datasets = {}
     for dataset in os.listdir(path):
         if dataset == "Missing_value_and_variable_length_datasets_adjusted":
